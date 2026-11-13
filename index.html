@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>直結給水化コストシミュレーター（株式会社 森田設備）</title>
+<meta name="description" content="受水槽方式から直結給水方式への切り替えで、工事費と40年間の維持費がどれだけ変わるかを無料で試算。三重県・愛知県の給排水設備工事は株式会社 森田設備へ。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+:root{
+--bg:#ffffff; --surface:#ffffff; --surface-2:#fdf3ea; --ink:#26201c; --muted:#8a7a6e;
+--line:#eee0d2; --navy:#c2410c; --navy-2:#431407; --navy-3:#9a3412;
+--teal:#ea580c; --teal-bright:#f97316; --teal-pale:#ffedd5;
+--accent:#ea580c; --accent-dark:#c2410c; --amber:#fb923c; --red:#dc2626;
+--dark:#26201c;
+--gray-bar:#c9bbae;
+--numfont:"Archivo","Noto Sans JP",sans-serif;
+color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;-webkit-font-smoothing:antialiased}
+button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.75rem}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.num{font-family:var(--numfont);font-variant-numeric:tabular-nums lining-nums}
+
+/* ---------- header ---------- */
+header.site{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
+.header-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;min-height:44px}
+.brand-mark{width:40px;height:40px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:900;font-size:19px;border-radius:8px;flex:none}
+.brand-mark span{border-bottom:3px solid #fff;line-height:1.15;padding-bottom:1px}
+.brand-name{font-weight:900;font-size:18px;line-height:1.15;color:var(--ink);white-space:nowrap}
+.brand-sub{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.header-actions{display:flex;align-items:center;gap:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;text-decoration:none;border-radius:6px;border:0;cursor:pointer;padding:10px 22px;font-size:15px;min-height:44px;transition:background 0.15s ease}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-dark)}
+.btn-teal{background:var(--dark);color:#fff}
+.btn-teal:hover{background:#000}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-ghost:hover{background:var(--surface-2)}
+@media(max-width:640px){.brand-name{font-size:15px}.brand-sub{font-size:10px}.header-actions .btn{padding:10px 14px;font-size:13.5px}}
+
+/* ---------- hero ---------- */
+.hero{background:#fff;color:var(--ink)}
+.hero-in{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;padding:64px 0 72px;align-items:start}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;color:var(--accent-dark);font-weight:800;font-size:13.5px;line-height:1.5;padding:0}
+.hero-badge svg{flex:none;color:var(--accent)}
+.hero h1{font-size:clamp(26px,4.2vw,38px);font-weight:900;line-height:1.5;margin:18px 0 14px;letter-spacing:.02em}
+h1>.hl{color:var(--accent)}
+.hero-lead{color:var(--muted);font-size:15px;margin:0;max-width:32em}
+.hero-figure{display:flex;align-items:baseline;gap:10px;margin:30px 0 6px;flex-wrap:wrap;border-top:2px solid var(--ink);padding-top:18px}
+.hero-figure>.lbl{font-weight:800;font-size:14px;line-height:1.4}
+.hero-figure>.big{font-family:var(--numfont);font-size:46px;font-weight:800;line-height:1;color:var(--accent)}
+.hero-figure>.unit{font-size:16px;font-weight:900;color:var(--ink);white-space:nowrap;flex:none}
+.hero-note{font-size:12.5px;color:var(--muted);margin:0}
+.hero-points{display:grid;gap:6px;margin:26px 0 30px}
+.hero-point{display:flex;align-items:center;gap:9px;font-weight:700;font-size:13.5px;line-height:1.5;color:var(--ink)}
+.hero-point svg{color:var(--accent);flex:none}
+.hero-point br{display:none}
+.btn-hero{background:var(--accent);color:#fff;font-size:16.5px;padding:15px 28px}
+.btn-hero:hover{background:var(--accent-dark)}
+/* preview — plain summary table card */
+.preview{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.preview-head{border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;letter-spacing:.05em;color:var(--muted)}
+.preview-head>.dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.preview-body{padding:10px 18px 18px}
+.preview-row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--line)}
+.preview-row b{font-variant-numeric:tabular-nums}
+.preview-result{padding:16px 2px 2px;text-align:left}
+.preview-result small{display:block;font-size:12px;color:var(--muted);font-weight:700}
+.preview-result>.pr-num{font-family:var(--numfont);font-size:34px;font-weight:800;color:var(--accent);line-height:1.25}
+.pr-num>span{font-size:16px}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:36px;padding:40px 0 48px}.preview{max-width:440px}}
+@media(max-width:560px){.hero-figure>.big{font-size:38px}}
+
+/* ---------- sections ---------- */
+section.block{padding:72px 0}
+.sec-title{text-align:left;font-size:clamp(23px,3.4vw,30px);font-weight:900;margin:0 0 10px;line-height:1.45;letter-spacing:.02em}
+.sec-sub{text-align:left;color:var(--muted);margin:0 0 40px;max-width:42em;font-size:15px}
+.aud-ico{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;margin-bottom:18px}
+.aud-ico.teal{background:var(--teal-pale);color:var(--teal)}
+.aud-ico.navy{background:var(--navy);color:#fff}
+/* audience — plain stacked rows divided by rules */
+.aud-wrap{display:grid;gap:0;max-width:900px;margin:0;border-top:1px solid var(--line)}
+.aud-row{display:flex;align-items:flex-start;gap:24px;padding:32px 4px;text-decoration:none;border-bottom:1px solid var(--line);color:var(--ink)}
+.aud-badge{flex:none;width:70px;text-align:center}
+.aud-badge>.aud-ico{margin:0 auto 7px;width:54px;height:54px;border-radius:50%;background:var(--teal-pale);color:var(--accent-dark)}
+.aud-row.partner .aud-ico{background:var(--dark);color:#fff}
+.aud-badge small{display:block;font-weight:900;font-size:10.5px;letter-spacing:.1em;color:var(--muted)}
+.aud-main{flex:1;min-width:0}
+.aud-main h3{margin:0 0 8px;font-size:clamp(18px,2.5vw,22px);font-weight:900;line-height:1.45}
+.aud-main h3 span{font-size:12.5px;font-weight:800;vertical-align:middle;margin-left:10px;padding:3px 10px;border:1px solid var(--ink);border-radius:999px;white-space:nowrap}
+.aud-main p{margin:0 0 14px;font-size:14.5px;line-height:1.85;color:var(--muted);max-width:40em}
+.aud-tags{display:flex;flex-wrap:wrap;gap:14px}
+.aud-tags span{font-size:12.5px;font-weight:700;color:var(--ink)}
+.aud-tags span::before{content:"― ";color:var(--accent);font-weight:900}
+.aud-go{flex:none;display:flex;align-items:center;gap:8px;font-weight:900;font-size:12.5px;line-height:1.4;color:var(--accent-dark);padding-top:6px}
+.aud-go>.circ{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--accent);display:grid;place-items:center;color:var(--accent);transition:transform .15s ease;flex:none}
+.aud-row:hover .aud-go>.circ{transform:translateX(3px)}
+@media(max-width:700px){.aud-row{flex-wrap:wrap;padding:26px 2px;gap:14px}.aud-badge{display:flex;align-items:center;gap:10px;width:auto;text-align:left}.aud-badge>.aud-ico{margin:0;width:46px;height:46px}.aud-main{flex-basis:100%;order:3}.aud-go{margin-left:auto}}
+
+/* ---------- simulator ---------- */
+.sim-help{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;max-width:1080px;margin:0 auto 40px;text-align:left;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.sim-help p{margin:0;font-weight:700;font-size:14px;flex:1;min-width:240px}
+.sim-help>.row{display:flex;gap:10px;flex-wrap:wrap}
+.sim-stack{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:360px 1fr;gap:56px;align-items:start}
+.sim-card{background:#fff;border:0;border-top:2px solid var(--ink);border-radius:0;padding:26px 0 8px}
+.sim-card.sim-inputs{grid-row:1/span 3;position:sticky;top:88px}
+.sim-card:not(.sim-inputs){grid-column:2}
+@media(max-width:1020px){.sim-stack{grid-template-columns:1fr;gap:8px}.sim-card.sim-inputs{grid-row:auto;position:static}.sim-card:not(.sim-inputs){grid-column:auto}}
+.sim-head{display:flex;align-items:baseline;gap:12px;padding-bottom:14px;margin-bottom:24px;flex-wrap:wrap}
+.step-no{font-family:var(--numfont);font-weight:800;font-size:22px;color:var(--accent);flex:none;line-height:1}
+.step-no::after{content:" /";color:var(--line);font-weight:400}
+.sim-head h3{margin:0;font-size:19px;font-weight:900;line-height:1.4}
+.sim-head p{margin:0;font-size:12.5px;color:var(--muted);flex-basis:100%}
+.live-tag{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--red);padding:0}
+.form-grid{display:grid;grid-template-columns:1fr;gap:22px}
+.sim-card:not(.sim-inputs) .form-grid{grid-template-columns:repeat(2,1fr)}
+.field label{display:block;font-weight:800;font-size:13.5px;margin-bottom:6px;color:var(--ink)}
+.field-box{display:flex;align-items:center;gap:8px;background:#fff;border:0;border-bottom:1.5px solid var(--ink);border-radius:0;padding:4px 0;min-height:50px}
+.field-box select{flex:1;background:transparent;border:0;font:inherit;font-weight:800;font-size:18px;color:var(--ink);min-width:0;cursor:pointer}
+.field-box>.unit{font-weight:900;font-size:16px;color:var(--accent-dark);white-space:nowrap}
+input[type="range"]{flex:1;accent-color:var(--accent);cursor:pointer;min-height:44px;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:#e7d9cb}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--accent);cursor:pointer}
+input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--accent);cursor:pointer}
+.range-val{font-family:var(--numfont);font-weight:800;font-size:21px;white-space:nowrap;color:var(--accent-dark)}
+.checks{display:flex;gap:8px 22px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.check-item{display:flex;align-items:center;gap:9px;background:transparent;border:0;border-radius:0;padding:8px 0;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}
+.check-item input{width:19px;height:19px;accent-color:var(--accent);flex:none}
+.check-item.hidden{display:none}
+.pump-under{margin-top:4px;width:100%;padding:6px 0;font-size:13px;min-height:40px}
+.pump-under input{width:16px;height:16px}
+.graph-link{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--accent-dark);border:0;border-bottom:1.5px solid var(--accent);border-radius:0;padding:6px 0;font-weight:800;font-size:13px;text-decoration:none;margin-top:16px;min-height:44px}
+.chart-title{display:flex;align-items:center;gap:8px;font-weight:900;font-size:16.5px;margin-bottom:10px}
+.chart-title svg{color:var(--teal);flex:none;width:20px;height:20px}
+.chart-caption{font-size:10.5px;color:var(--muted);text-align:left;margin:10px 0 0}
+.cmp-check small{display:block;font-size:10.5px;font-weight:700;color:var(--accent-dark);margin-top:2px}
+.cmp-note{font-size:10.5px;color:var(--muted);margin:8px 0 0}
+
+.savings-box{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0}
+@media(max-width:700px){.savings-box{grid-template-columns:1fr}}
+.savings-box>div>.pill{display:inline-block;color:var(--accent-dark);font-weight:900;font-size:12.5px;letter-spacing:.04em;margin-bottom:8px}
+.savings-box h4{margin:0 0 8px;font-size:20px;font-weight:900;line-height:1.5}
+.savings-box p{margin:0;font-size:13px;color:var(--muted)}
+.savings-amount{text-align:right}
+@media(max-width:700px){.savings-amount{text-align:left}}
+.savings-amount small{font-weight:800;color:var(--muted);font-size:12.5px;display:block}
+.savings-amount>.amt{font-family:var(--numfont);font-size:40px;font-weight:800;color:var(--accent);line-height:1.2}
+.savings-amount>.amt>span{font-size:17px}
+.savings-amount>.avg{font-weight:900;color:var(--red);font-size:15.5px}
+
+.result-grid{display:grid;grid-template-columns:5fr 7fr;gap:36px}
+.estimate-note{display:flex;gap:11px;align-items:flex-start;background:#fff7ed;border:1px solid #f0c9a8;border-radius:10px;padding:15px 17px;margin-bottom:24px}
+.estimate-note svg{flex:none;color:var(--accent-dark);margin-top:3px}
+.estimate-note p{margin:0;font-size:14.5px;font-weight:700;line-height:1.7}
+.estimate-note p b{color:var(--accent-dark);font-weight:900}
+.estimate-note-sm{display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:700;color:var(--accent-dark);margin:16px 0 0}
+.estimate-note-sm svg{flex:none;margin-top:2px}
+@media(max-width:820px){.result-grid{grid-template-columns:1fr}}
+.result-total small{font-weight:800;color:var(--muted);font-size:13px}
+.result-total>.total{font-family:var(--numfont);font-size:36px;font-weight:800;line-height:1.25;margin:4px 0 16px}
+.notice{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:12px;color:var(--muted)}
+.notice b{color:var(--red)}
+.notice ul{margin:6px 0 0;padding-left:18px}
+.bd-title{font-weight:900;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:6px}
+.bd-group{display:flex;justify-content:space-between;font-weight:900;margin:18px 0 4px;font-size:14.5px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.bd-group:first-of-type{margin-top:8px}
+.bd-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--muted);padding:5px 0;border-bottom:1px dashed var(--line)}
+.bd-row b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bd-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.bd-tags span{font-size:11.5px;border:1px solid var(--line);border-radius:6px;padding:4px 9px;color:var(--muted)}
+.bd-tags b{color:var(--ink)}
+.result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.result-actions>.btn{flex:1;min-width:210px}
+.copy-msg{font-size:13px;font-weight:700;color:var(--teal);min-height:1.4em;margin-top:8px}
+
+/* comparison */
+.cmp-controls{display:grid;gap:14px;border-bottom:1px solid var(--line);padding:0 0 20px;margin-bottom:26px}
+.cmp-controls .field-box{max-width:560px}
+.cmp-bars{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-bottom:8px}
+.cmp-col{flex:1;max-width:230px;text-align:center}
+.cmp-col>.cap{font-size:13px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.cmp-col>.cap.blue{color:var(--teal)}
+.bar-zone{height:170px;display:flex;align-items:flex-end;justify-content:center;border-bottom:2px solid var(--ink);overflow:hidden}
+.bar{width:62%;display:flex;justify-content:center;padding-top:10px;color:#fff;font-weight:900;font-size:16px;transition:height.6s ease;border-radius:6px 6px 0 0}
+.bar.gray{background:var(--gray-bar);height:100%}
+.bar.teal{background:var(--accent)}
+.bar-foot{padding:8px 6px 0;font-weight:900;font-size:14px;text-align:center}
+.bar-foot.gray{color:var(--muted)}
+.bar-foot.teal{color:var(--teal)}
+.cmp-arrow{align-self:center;color:var(--muted);padding-bottom:60px}
+.chart-box{border-top:1px solid var(--line);padding:20px 0 0;margin-top:28px}
+.chart-box svg#chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;font-weight:700;margin-bottom:8px}
+.legend i{display:inline-block;width:22px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+table.cmp-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:28px}
+table.cmp-table th,table.cmp-table td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+table.cmp-table th:first-child,table.cmp-table td:first-child{text-align:left;padding-left:0}
+table.cmp-table th:last-child,table.cmp-table td:last-child{padding-right:0}
+table.cmp-table thead th{font-weight:900;border-bottom:2px solid var(--ink);color:var(--ink);background:transparent}
+table.cmp-table tr.total td{font-weight:900;background:var(--surface-2)}
+table.cmp-table tr.saving td{font-weight:900;color:var(--teal)}
+.table-scroll{overflow-x:auto}
+@media(max-width:560px){table.cmp-table{font-size:12.5px}table.cmp-table th,table.cmp-table td{padding:8px 6px}}
+
+/* diagram + merits */
+.diagram{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;max-width:900px;margin:0 0 48px}
+@media(max-width:760px){.diagram{grid-template-columns:1fr}.diagram>.vs{align-self:center;justify-self:center}}
+.dia-card{border:1px solid var(--line);border-radius:10px;padding:22px}
+.dia-card h4{margin:0 0 4px;font-size:16.5px;font-weight:900}
+.dia-card p{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.dia-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;font-weight:800}
+.dia-node{background:var(--surface-2);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;text-align:center;line-height:1.35}
+.dia-node small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.dia-node.bad{border-color:#e5b1b1}
+.dia-node.good{border-color:var(--teal-bright);background:var(--teal-pale)}
+.dia-arrow{color:var(--muted);font-weight:900}
+.vs{width:42px;height:42px;border-radius:50%;background:var(--dark);color:#fff;font-weight:800;display:grid;place-items:center;align-self:center;font-size:13px;font-family:var(--numfont)}
+.merits{display:grid;grid-template-columns:1fr;gap:0;max-width:880px;margin:0;border-top:1px solid var(--line)}
+.merit{display:grid;grid-template-columns:auto 1fr;column-gap:20px;align-items:start;padding:28px 2px;border-bottom:1px solid var(--line)}
+.merit>.aud-ico{margin:0;grid-row:1/3}
+.merit h4{margin:0 0 6px;font-size:18px;font-weight:900}
+.merit p{margin:0;color:var(--muted);font-size:14.5px;max-width:38em}
+
+/* flow — vertical timeline */
+.flow-grid{display:grid;grid-template-columns:1fr;gap:0;max-width:720px;margin:0}
+.flow-step{border-left:2px solid var(--line);padding:2px 0 30px 34px;position:relative}
+.flow-step:last-child{padding-bottom:4px}
+.flow-step>.no{position:absolute;top:0;left:-14px;width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--accent);color:var(--accent-dark);font-weight:900;display:grid;place-items:center;font-size:12.5px;font-family:var(--numfont)}
+.flow-step h4{margin:0 0 6px;font-size:16.5px;font-weight:900}
+.flow-step p{margin:0;font-size:13.5px;color:var(--muted);max-width:38em}
+
+/* faq */
+.faq-list{max-width:760px;margin:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.faq{border-bottom:1px solid var(--line);overflow:hidden}
+.faq button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;background:none;border:0;font:inherit;font-weight:800;font-size:15.5px;text-align:left;padding:17px 2px;cursor:pointer;color:var(--ink);min-height:52px}
+.faq .q{color:var(--teal);font-weight:900;margin-right:6px}
+.faq>.ans{display:none;padding:0 2px 18px;color:var(--muted);font-size:14.5px}
+.faq.open>.ans{display:block}
+.faq>.ans>.a{color:var(--teal);font-weight:900;margin-right:6px}
+.faq>button>.chev{transition:transform 0.2s;flex:none;color:var(--muted)}
+.faq.open>button>.chev{transform:rotate(180deg)}
+
+/* contact */
+.contact{border-top:2px solid var(--ink);padding:72px 0}
+.contact h2{text-align:left;font-size:clamp(23px,3.4vw,30px);font-weight:900;margin:0 0 10px}
+.contact p.lead{text-align:left;color:var(--muted);font-size:15px;margin:0 0 32px;max-width:40em}
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:820px;margin:0}
+@media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+.contact-card{border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;align-items:center;gap:14px;text-decoration:none;min-height:92px;color:var(--ink)}
+.contact-card.teal{border-color:var(--accent)}
+.contact-card svg{color:var(--accent);flex:none}
+.contact-card small{display:block;font-size:12px;font-weight:700;color:var(--muted)}
+.contact-card span.big{font-size:clamp(18px,2.6vw,23px);font-weight:900;line-height:1.3;word-break:break-all}
+.contact-note{text-align:left;color:var(--muted);font-size:13px;margin:20px 0 0}
+
+/* inquiry form */
+.contact-form{border:1px solid var(--line);border-radius:12px;padding:26px;max-width:820px;margin:24px 0 0;text-align:left}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:640px){.cf-grid{grid-template-columns:1fr}}
+.cf-field{margin-bottom:16px}
+.cf-field.full{grid-column:1/-1}
+.cf-field label{display:block;font-weight:800;font-size:13.5px;margin-bottom:6px}
+.cf-field label .req{color:var(--red);font-size:11.5px;margin-left:5px}
+.cf-field input,.cf-field textarea{width:100%;font:inherit;font-size:15px;padding:11px 12px;border:1px solid #d8c8ba;border-radius:8px;background:#fff;color:var(--ink);min-height:48px}
+.cf-field input:focus,.cf-field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.cf-field textarea{min-height:110px;resize:vertical}
+.sim-attach{background:var(--surface-2);border:1px dashed #f0b285;border-radius:10px;padding:13px 15px;margin-bottom:18px}
+.sim-attach p{margin:0 0 6px;font-size:12.5px;font-weight:800;color:var(--accent-dark)}
+.sim-attach pre{margin:0;font:inherit;font-size:12.5px;white-space:pre-wrap;color:var(--ink);line-height:1.6}
+.btn-submit{width:100%;font-size:16.5px;padding:15px}
+.form-status{font-weight:800;font-size:14px;color:var(--teal);min-height:1.5em;margin:12px 0 0;text-align:center}
+.cf-note{font-size:11.5px;color:var(--muted);margin:10px 0 0;text-align:center}
+
+/* footer */
+footer.site{background:#fff;color:var(--muted);border-top:1px solid var(--line);padding:44px 0 30px;font-size:14px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:28px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+footer.site h4{color:var(--ink);margin:0 0 12px;font-size:15px}
+footer.site ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+footer.site a{text-decoration:none}
+footer.site a:hover{color:var(--accent-dark)}
+.foot-brand{color:var(--ink);font-size:19px;font-weight:900;margin-bottom:10px}
+.copy{border-top:1px solid var(--line);margin-top:30px;padding-top:18px;text-align:center;font-size:12px;color:#b3a294}
+
+/* mobile fixed bar */
+.mobile-bar{display:none}
+@media(max-width:760px){
+.mobile-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line)}
+.mobile-bar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:9px 4px;font-size:11px;font-weight:800;text-decoration:none;min-height:58px;color:var(--ink)}
+.mobile-bar a.sim{background:var(--accent);color:#fff}
+body{padding-bottom:58px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="site">
+<div class="wrap header-in">
+<a class="brand" href="#top" aria-label="株式会社 森田設備 トップへ">
+<span class="brand-mark"><span>森</span></span>
+<span>
+<span class="brand-name">株式会社 森田設備</span>
+<span class="brand-sub" style="display:block">MORITA SETSUBI ｜ 給排水設備工事</span>
+</span>
+</a>
+<div class="header-actions">
+<a class="btn btn-accent" href="#contact" style="white-space:nowrap">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+お問い合わせ
+</a>
+</div>
+</div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<div class="hero">
+<div class="wrap hero-in">
+<div>
+<span class="hero-badge">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+<span>受水槽の更新、その前に！<br>直結給水化の削減効果がその場でわかります</span>
+</span>
+<h1>寿命を迎えた受水槽を<br>交換する前に、<span class="hl">直結給水化</span>を<br>試算してみませんか？</h1>
+<p class="hero-lead">受水槽方式から直結給水方式へ切り替えると、清掃・点検・ポンプ電気代などの維持費が大きく下がります。下のシミュレーターで条件を変えると、この金額も連動します。</p>
+<div class="hero-figure" aria-live="polite">
+<div class="lbl">40年間で削減できる額</div>
+<div class="big num" id="heroSavings">―</div>
+<div class="unit">万円</div>
+</div>
+<p class="hero-note">※初期条件（<span id="heroCond">―</span>）での試算例です。下のシミュレーション設定（直結化の時期を含む）と連動します。</p>
+<div class="hero-points">
+<span class="hero-point"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1.86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1.78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>登録不要で<br>すぐに使える</span>
+<span class="hero-point"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M21 14h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2z"/><path d="M3 14v-3a9 9 0 0 1 18 0v3"/></svg>分からない数値は<br>メールで相談できます</span>
+<span class="hero-point"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>工事費と40年比較を<br>その場で算出</span>
+</div>
+<a class="btn btn-hero" href="#simulator">今すぐ無料でシミュレートしてみる
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+</a>
+</div>
+<div class="preview" aria-hidden="true">
+<div class="preview-head"><span class="dot"></span>シミュレーター結果プレビュー</div>
+<div class="preview-body">
+<div class="preview-row"><span>建物</span><b id="pvCond">―</b></div>
+<div class="preview-row"><span>直結化工事費（概算総額）</span><b id="pvTotal">―</b></div>
+<div class="preview-row"><span>受水槽方式を40年続けた場合</span><b id="pvTank">―</b></div>
+<div class="preview-row" style="border-bottom:0"><span id="pvDirectLabel">直結化した場合（40年）</span><b id="pvDirect">―</b></div>
+<div class="preview-result">
+<small>今後40年間でこれだけお得になります</small>
+<div class="pr-num num"><span id="pvSavings">―</span><span> 万円</span></div>
+<small id="pvAvg">―</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- AUDIENCE -->
+<section class="block" style="padding-bottom:8px">
+<div class="wrap">
+<h2 class="sec-title">どちらのお立場で<br style="display:none" class="sp-br">お使いですか？</h2>
+<p class="sec-sub">使う方は違っても、試算はひとつです。お立場に近いほうから下のシミュレーターへお進みください。三重・愛知の物件なら、結果をもとに株式会社 森田設備が現地調査までご案内します。</p>
+<div class="aud-wrap">
+<a class="aud-row owner" href="#simulator">
+<div class="aud-badge">
+<div class="aud-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1.709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+<small>FOR OWNER</small>
+</div>
+<div class="aud-main">
+<h3>マンションをお持ちの方へ<span>オーナー様・管理組合様</span></h3>
+<p>受水槽の更新見積を見て「このまま替えるしかないのか」と感じたら、一度だけ比べてみてください。階数と戸数を入れるだけで、直結化した場合の工事費と、この先40年でどれだけ維持費が変わるかがその場で出ます。登録も費用もかかりません。</p>
+<div class="aud-tags"><span>受水槽の更新見積が高い</span><span>毎年の清掃・点検費を減らしたい</span><span>修繕積立金の使い方を考えたい</span></div>
+</div>
+<div class="aud-go"><span class="circ"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>自分の物件で<br>試算する</div>
+</a>
+<a class="aud-row partner" href="#simulator">
+<div class="aud-badge">
+<div class="aud-ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg></div>
+<small>FOR PARTNER</small>
+</div>
+<div class="aud-main">
+<h3>管理物件のご提案に使う方へ<span>マンション管理会社様</span></h3>
+<p>オーナー様や理事会への説明で「数字で見せたい」ときにどうぞ。物件ごとに条件を変えて何度でも試算でき、40年比較のグラフと内訳まで確認できます。気になる物件は、結果をそのままメールで送っていただければ、こちらで現地調査と正式見積に進めます。</p>
+<div class="aud-tags"><span>提案資料に載せる数字がほしい</span><span>切替時期ごとの差を比べたい</span><span>複数物件をまとめて検討したい</span></div>
+</div>
+<div class="aud-go"><span class="circ"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>管理物件で<br>試算する</div>
+</a>
+</div>
+</div>
+</section>
+
+<!-- SIMULATOR -->
+<section class="block" id="simulator">
+<div class="wrap">
+<h2 class="sec-title">概算シミュレーター</h2>
+<p class="sec-sub">建物の情報を入力するだけで、工事費用と納付金の目安がわかります。現在の維持費との40年間比較も可能です。</p>
+
+<div class="sim-help">
+<p>「使い方が分からない」「入力する数値が分からない」といった場合は、代わりにお調べしますのでお気軽にご連絡ください。</p>
+<div class="row">
+<a class="btn btn-teal" href="#contact">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+メールで相談する
+</a>
+</div>
+</div>
+
+<div class="sim-stack">
+<!-- STEP 1 -->
+<div class="sim-card sim-inputs">
+<div class="sim-head">
+<span class="step-no">1</span>
+<div><h3>条件入力</h3><p>建物の規模や現在の設備状況を入力してください</p></div>
+<span class="live-tag">条件を変更するとリアルタイムで再計算されます</span>
+</div>
+<div class="form-grid">
+<div class="field">
+<label for="floors">建物の階数</label>
+<div class="field-box">
+<input type="range" id="floors" min="1" max="20" step="1" value="4" aria-label="建物の階数" />
+<span class="range-val num" id="floorsVal">4階</span>
+</div>
+<label class="check-item pump-under" id="boosterWrap"><input type="checkbox" id="booster" checked />増圧ポンプ使用</label>
+</div>
+<div class="field">
+<label for="units">総戸数</label>
+<div class="field-box">
+<select id="units" aria-label="総戸数"></select>
+<span class="unit">戸</span>
+</div>
+</div>
+<div class="field">
+<label for="pipe">現在の口径</label>
+<div class="field-box">
+<select id="pipe" aria-label="現在の口径"></select>
+<span class="unit">mm</span>
+</div>
+</div>
+<div class="field">
+<label for="tank">受水槽容量</label>
+<div class="field-box">
+<select id="tank" aria-label="受水槽容量"></select>
+<span class="unit">t</span>
+</div>
+</div>
+</div>
+<div class="checks">
+<label class="check-item"><input type="checkbox" id="tankRemoval" checked />既存受水槽の撤去</label>
+<label class="check-item"><input type="checkbox" id="elevatedRemoval" />既設高架水槽の撤去</label>
+</div>
+</div>
+
+<!-- STEP 2 -->
+<div class="sim-card">
+<div class="sim-head">
+<span class="step-no">2</span>
+<div><h3>削減コストを確認する</h3><p>受水槽方式を続けた場合との40年間の差額です</p></div>
+</div>
+<div class="savings-box">
+<div>
+<span class="pill" id="savingsPill">20年後に直結化によるコスト削減効果</span>
+<h4>今後40年間で<br>これだけお得になります</h4>
+<p>浮いた管理費を修繕積立金やバリューアップ工事に回すことが可能です。<br>※下部のシミュレーション設定と連動しています。</p>
+<a class="graph-link" href="#simulation-graph">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+経過年数ごとのシミュレーショングラフを確認
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+</a>
+</div>
+<div class="savings-amount">
+<small>削減総額</small>
+<div class="amt num"><span id="savingsAmt" style="font-size:inherit">―</span><span> 万円</span></div>
+<div class="avg num" id="savingsAvg">―</div>
+</div>
+</div>
+</div>
+
+<!-- STEP 3 -->
+<div class="sim-card">
+<div class="sim-head">
+<span class="step-no">3</span>
+<div><h3>工事費用 見積金額</h3><p>直結化工事費と、水道事業者への納付金・手数料の内訳です</p></div>
+</div>
+<div class="estimate-note" role="note">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+<p><b>この金額は概算の目安です。</b>実際の工事費は、配管の状態や道路掘削の範囲など、現地調査の結果によって変わる場合があります。正確な金額は、無料の現地調査のうえお見積りでご提示します。</p>
+</div>
+<div class="result-grid">
+<div class="result-total">
+<small>概算総額（工事費＋納付金）</small>
+<div class="total num" id="totalAmt">―</div>
+<div class="notice">
+<p style="margin:0"><b>※ご注意：</b>本シミュレーションの金額は概算です。正確なお見積りには現地調査（無料）が必要です。納付金・手数料は自治体（水道事業者）により異なり、本試算では目安として合算しています。</p>
+<p style="margin:8px 0 0">※以下の項目は現地調査の上、別途お見積りとなるため、実際の金額が変動するケースがございます。</p>
+<ul>
+<li>屋内配管（立管など）の全面的な引き直し・更新工事</li>
+<li>長距離の道路掘削、および広範囲のアスファルト舗装復旧</li>
+<li>重機が横付けできない場所での受水槽・高架水槽の解体撤去</li>
+<li>1階テナント店舗用の特殊な配管切り替え工事</li>
+<li>すでに直結化の要件を満たし、軽微な工事で済む場合（大幅に安くなるケース）</li>
+</ul>
+</div>
+<div class="result-actions">
+<a class="btn btn-teal" href="#contact">この結果を送って無料現地調査を依頼
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+</a>
+<button class="btn btn-ghost" id="copyResult" type="button">結果をコピーする</button>
+</div>
+<div class="copy-msg" id="copyMsg" role="status"></div>
+</div>
+<div>
+<div class="bd-title">内訳詳細</div>
+<div class="bd-group"><span>直結化工事費用</span><span class="num" id="bdConstruction">―</span></div>
+<div class="bd-row"><span>基礎工事費（基本＋戸数分）</span><b id="bdBase">―</b></div>
+<div class="bd-row" id="bdPumpRow"><span>増圧ポンプ設置費</span><b id="bdPump">―</b></div>
+<div class="bd-row"><span>申請・撤去費等（設計費＋受水槽／高架水槽撤去）</span><b id="bdEtc">―</b></div>
+<div class="bd-group"><span>納付金・手数料等</span><span class="num" id="bdFees">―</span></div>
+<div class="bd-row"><span>基本工事費（施設整備費）― 口径を太くする場合の差額</span><b id="bdDiff">―</b></div>
+<div class="bd-row"><span>直接工事（道路工事費）― 増径時に発生、受水槽10t以下は免除の場合あり</span><b id="bdRoad">―</b></div>
+<div class="bd-row"><span>設計審査手数料</span><b id="bdCheck">―</b></div>
+<div class="bd-tags">
+<span>選定口径：<b id="bdNewPipe">―</b></span>
+<span id="bdRoadReason">―</span>
+<span id="bdPumpType">―</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- STEP 4: 40y comparison -->
+<div class="sim-card" id="simulation-graph">
+<div class="sim-head">
+<span class="step-no">4</span>
+<div><h3>今後40年間の維持費シミュレーション</h3><p>現状維持と、直結給水に切り替えた場合のコスト比較</p></div>
+</div>
+
+<div class="cmp-controls">
+<label class="check-item cmp-check" style="align-self:flex-start"><input type="checkbox" id="compareNow" /><span>今回受水槽を交換する場合と比較する<small>※0年目と30年後に受水槽の更新費用が発生すると想定</small></span></label>
+<div class="field">
+<label for="renewalYear">既存受水槽はあと何年で寿命（更新）ですか？</label>
+<div class="field-box">
+<input type="range" id="renewalYear" min="0" max="40" step="1" value="20" aria-label="直結化する時期（年後）" />
+<span class="range-val num" id="renewalYearVal" style="color:var(--teal)">20年後</span>
+</div>
+<p class="cmp-note">※スライダーを動かすと、グラフの<span style="color:var(--teal);font-weight:800">オレンジ色の実線（<span id="sliderNoteLabel">20年後に直結化</span>）</span>が変化します。</p>
+</div>
+</div>
+
+<div class="cmp-bars">
+<div class="cmp-col">
+<div class="cap">受水槽方式を維持</div>
+<div class="bar-zone"><div class="bar gray num" id="barTankVal">―</div></div>
+<div class="bar-foot gray">将来コストが高額</div>
+</div>
+<div class="cmp-arrow"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+<div class="cmp-col">
+<div class="cap blue" id="barRightCap">20年後に直結化</div>
+<div class="bar-zone"><div class="bar teal num" id="barRightVal" style="height:60%">―</div></div>
+<div class="bar-foot teal num" id="barRightFoot">―</div>
+</div>
+</div>
+
+<div class="chart-box">
+<div class="chart-title">
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+累計支出推移と損益分岐点
+</div>
+<div class="legend">
+<span><i style="background:#b8a89c"></i>受水槽方式（累計支出）</span>
+<span><i style="background:#ea580c"></i><span id="legendRight">20年後に直結化（累計支出）</span></span>
+</div>
+<svg id="chart" viewBox="0 0 720 380" role="img" aria-label="40年間の累計支出グラフ"></svg>
+</div>
+<p class="chart-caption">※工事費（0年目）から始まり、年ごとの維持費・定期メンテナンス費を加算した累計額の推移です。</p>
+
+<div class="table-scroll">
+<table class="cmp-table">
+<thead><tr><th>項目（40年間合計・万円）</th><th>受水槽方式</th><th id="thRight">20年後に直結給水方式</th></tr></thead>
+<tbody>
+<tr><td>受水槽清掃・水質検査</td><td class="num" id="tTankClean">―</td><td class="num" id="tRightClean">―</td></tr>
+<tr><td>ポンプ保守・点検</td><td class="num" id="tTankMaint">―</td><td class="num" id="tRightMaint">―</td></tr>
+<tr><td>ポンプ交換費用</td><td class="num" id="tTankPump">―</td><td class="num" id="tRightPump">―</td></tr>
+<tr><td>電気代</td><td class="num" id="tTankElec">―</td><td class="num" id="tRightElec">―</td></tr>
+<tr><td>受水槽の更新費用</td><td class="num" id="tTankRenew">―</td><td class="num" id="tRightRenew">―</td></tr>
+<tr><td>今回の工事費用＋納付金</td><td class="num">0万円</td><td class="num" id="tRightConst">―</td></tr>
+<tr class="total"><td>40年間 合計</td><td class="num" id="tTankTotal">―</td><td class="num" id="tRightTotal">―</td></tr>
+<tr class="saving"><td>削減額</td><td class="num">―</td><td class="num" id="tRightSaving">―</td></tr>
+</tbody>
+</table>
+</div>
+<p class="estimate-note-sm">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+<span>金額は目安であり、現地調査の結果によって変わる場合があります。</span>
+</p>
+<p style="font-size:12.5px;color:var(--muted);margin:16px 0 0" id="renewNote">―</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MERITS -->
+<section class="block" style="padding-top:8px">
+<div class="wrap">
+<h2 class="sec-title">直結給水切替のメリット</h2>
+<p class="sec-sub">今の受水槽方式にはない、多くの利点があります。</p>
+
+<div class="diagram">
+<div class="dia-card">
+<h4>いま：受水槽方式</h4>
+<p>いったんタンクに貯めるため、清掃・水質検査・ポンプ管理が毎年必要です。</p>
+<div class="dia-flow">
+<span class="dia-node">水道本管</span><span class="dia-arrow">→</span>
+<span class="dia-node bad">受水槽<small>清掃・検査が必要</small></span><span class="dia-arrow">→</span>
+<span class="dia-node bad">加圧ポンプ<small>電気代・交換費</small></span><span class="dia-arrow">→</span>
+<span class="dia-node">各戸の蛇口</span>
+</div>
+</div>
+<div class="vs">VS</div>
+<div class="dia-card">
+<h4>切替後：直結給水方式</h4>
+<p>水道管から直接届けるので、タンクの維持管理そのものがなくなります。</p>
+<div class="dia-flow">
+<span class="dia-node">水道本管</span><span class="dia-arrow">→</span>
+<span class="dia-node good">増圧ポンプ<small>必要な建物のみ</small></span><span class="dia-arrow">→</span>
+<span class="dia-node good">各戸の蛇口<small>いつも新鮮な水</small></span>
+</div>
+</div>
+</div>
+
+<div class="merits">
+<article class="merit">
+<div class="aud-ico teal"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+<h4>衛生的でおいしい水</h4>
+<p>受水槽に溜めずに水道管から直接蛇口へ届けるため、いつでも新鮮で安全な水を利用できます。塩素の抜けやタンク内の衛生面の心配も減ります。</p>
+</article>
+<article class="merit">
+<div class="aud-ico teal"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+<h4>維持管理コスト削減</h4>
+<p>受水槽の定期清掃、水質検査、ポンプのメンテナンス費用が不要になり、長期的なコストダウンになります。上の試算で40年分を確認できます。</p>
+</article>
+<article class="merit">
+<div class="aud-ico teal"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M2 22h20"/><path d="M10 6h4M10 10h4M10 14h4"/></svg></div>
+<h4>空きスペースの有効活用</h4>
+<p>受水槽を撤去した跡地を、駐輪場や倉庫、駐車場などとして有効活用できます。建物の価値向上にもつながります。</p>
+</article>
+</div>
+</div>
+</section>
+
+<!-- FLOW -->
+<section class="block" style="padding-top:8px">
+<div class="wrap">
+<h2 class="sec-title">工事完了までの流れ</h2>
+<p class="sec-sub">三重県・愛知県の各水道事業者との協議・申請も、株式会社 森田設備がまとめて対応します。</p>
+<div class="flow-grid">
+<div class="flow-step"><span class="no">1</span><h4>お問い合わせ・相談</h4><p>まずはメールよりご連絡ください。建物の図面があればスムーズです。上のシミュレーション結果を送っていただいても構いません。</p></div>
+<div class="flow-step"><span class="no">2</span><h4>現地調査・情報収集</h4><p>配管ルートや水圧調査、設置場所の確認を行います（無料）。必要な場合は、管轄の水道事業者と直結化が可能かどうか事前協議も行います。</p></div>
+<div class="flow-step"><span class="no">3</span><h4>お見積り・ご契約</h4><p>調査と協議結果に基づき、正確な工事費用をご提示します。シミュレーションとの差が出る場合は理由もあわせてご説明します。</p></div>
+<div class="flow-step"><span class="no">4</span><h4>申請</h4><p>各市町村の水道事業者への給水装置工事の申請手続きを行います。株式会社 森田設備で申請を行うため、スムーズな手続きが可能です。</p></div>
+<div class="flow-step"><span class="no">5</span><h4>本工事・切替</h4><p>断水時間を最小限に抑え、配管の接続工事とポンプ設置（必要な場合）を行います。</p></div>
+<div class="flow-step"><span class="no">6</span><h4>受水槽撤去</h4><p>切り替え完了後、不要になった受水槽を解体・撤去し、整地します。跡地の活用方法もご相談ください。</p></div>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="block" style="padding-top:8px">
+<div class="wrap">
+<h2 class="sec-title">よくあるご質問</h2>
+<p class="sec-sub"></p>
+<div class="faq-list">
+<div class="faq open">
+<button type="button" aria-expanded="true"><span><span class="q">Q.</span>断水時間はどれくらいですか？</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="ans"><span class="a">A.</span>建物の規模によりますが、配管の切り替え接続を行う数時間程度で済むケースがほとんどです。工事の大部分は断水なしで行います。</div>
+</div>
+<div class="faq">
+<button type="button" aria-expanded="false"><span><span class="q">Q.</span>水圧が弱くなることはありませんか？</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="ans"><span class="a">A.</span>事前に水道事業者と協議し、十分な水圧が確保できるか調査します。水圧不足が懸念される場合は、増圧ポンプを設置することで快適な水圧を確保します。</div>
+</div>
+<div class="faq">
+<button type="button" aria-expanded="false"><span><span class="q">Q.</span>すべての建物で直結化できますか？</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="ans"><span class="a">A.</span>前面道路の水道本管の口径や水圧、建物の配管状況によっては直結化できない場合があります。まずは無料の現地調査をご利用ください。</div>
+</div>
+<div class="faq">
+<button type="button" aria-expanded="false"><span><span class="q">Q.</span>シミュレーションの金額はそのまま工事できますか？</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="ans"><span class="a">A.</span>あくまで概算の目安です。配管の状態や道路掘削の範囲など、現地でしか分からない条件で金額は変わります。現地調査・お見積りは無料ですので、結果を送っていただければ詳細をお出しします。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+<div class="wrap">
+<h2>無料現地調査・お見積り依頼</h2>
+<p class="lead">受水槽のメンテナンスにお悩みの方、コスト削減をご検討の方はお気軽にご相談ください。しつこい営業は一切いたしません。</p>
+<div class="contact-grid">
+<a class="contact-card teal" href="#contactForm">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+<span><small>下のフォームから送信できます</small><span class="big">メールでお問い合わせ</span></span>
+</a>
+<a class="contact-card outline" href="#simulator">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>
+<span><small>まずは金額だけ知りたい方</small><span class="big">シミュレーターへ戻る</span></span>
+</a>
+</div>
+<p class="contact-note">対応エリア：三重県・愛知県 ／ お問い合わせはフォームで受け付けています</p>
+
+<form class="contact-form" id="contactForm" action="https://formsubmit.co/kaito.m_king_0203@icloud.com" method="POST">
+<input type="hidden" name="_subject" value="【シミュレーター】直結給水化のお問い合わせ・現地調査依頼" />
+<input type="hidden" name="_template" value="table" />
+<input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+<input type="hidden" name="シミュレーション結果" id="simResultField" value="" />
+<div class="cf-grid">
+<div class="cf-field">
+<label for="cfName">お名前<span class="req">必須</span></label>
+<input type="text" id="cfName" name="お名前" required autocomplete="name" placeholder="例：山田 太郎" />
+</div>
+<div class="cf-field">
+<label for="cfEmail">ご連絡先メールアドレス<span class="req">必須</span></label>
+<input type="email" id="cfEmail" name="email" required autocomplete="email" placeholder="返信先のメールアドレス" />
+</div>
+<div class="cf-field">
+<label for="cfTel">お電話番号（任意）</label>
+<input type="tel" id="cfTel" name="電話番号" autocomplete="tel" placeholder="例：090-0000-0000" />
+</div>
+<div class="cf-field">
+<label for="cfPlace">物件名・所在地（任意）</label>
+<input type="text" id="cfPlace" name="物件名・所在地" placeholder="例：○○マンション（四日市市）" />
+</div>
+<div class="cf-field full">
+<label for="cfMsg">ご相談内容<span class="req">必須</span></label>
+<textarea id="cfMsg" name="ご相談内容" required placeholder="現地調査のご希望日時、建物の状況、ご質問などをお書きください。"></textarea>
+</div>
+</div>
+<div class="sim-attach">
+<p>シミュレーション結果（自動で一緒に送信されます）</p>
+<pre id="simResultPreview">―</pre>
+</div>
+<button class="btn btn-accent btn-submit" id="formSubmitBtn" type="submit">この内容で送信する</button>
+<p class="form-status" id="formStatus" role="status"></p>
+<p class="cf-note">送信いただいた内容は、株式会社 森田設備からのご連絡にのみ使用します。</p>
+</form>
+</div>
+</section>
+</main>
+
+<footer class="site">
+<div class="wrap">
+<div class="foot-grid">
+<div>
+<div class="foot-brand">株式会社 森田設備</div>
+<p style="margin:0;max-width:34em">三重県・愛知県で給排水設備工事（リフォーム・新築・漏水修理・配管更新・上下水道の引き込み等）を行っています。マンション・ビルの直結給水化（給水方式変更工事）もご相談ください。</p>
+<p style="margin:12px 0 0"><a href="#contact">お問い合わせはこちら（フォームで受け付けています）</a></p>
+</div>
+<div>
+<h4>メニュー</h4>
+<ul>
+<li><a href="#top">トップページ</a></li>
+<li><a href="#simulator">概算見積シミュレーション</a></li>
+<li><a href="#contact">お問い合わせ</a></li>
+</ul>
+</div>
+<div>
+<h4>対応工事</h4>
+<ul>
+<li>直結給水化・給水方式変更</li>
+<li>給排水配管の更新・修理</li>
+<li>漏水修理</li>
+<li>上下水道の引き込み</li>
+<li>リフォーム・新築の設備工事</li>
+</ul>
+</div>
+</div>
+<div class="copy">© 2026 Morita Setsubi. All Rights Reserved.　※本ページのシミュレーションは概算の目安です。</div>
+</div>
+</footer>
+
+<nav class="mobile-bar" aria-label="クイック連絡">
+<a class="sim" href="#simulator">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>
+シミュレーション
+</a>
+<a href="#contact">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+メールで相談
+</a>
+</nav>
+
+<script>
+(function(){
+"use strict";
+var COST = {
+BASE_4: 3250000, BASE_5: 3640000, BASE_6: 4030000, BASE_ADD: 390000,
+UNIT_PRICE: 52000, PUMP: 1560000, DESIGN: 130000, DISCOUNT: 100000,
+REMOVAL_TANK: 455000, REMOVAL_ELEVATED: 975000,
+FACILITY: {13:22000, 20:66000, 25:308000, 40:792000, 50:1320000, 75:2750000},
+DESIGN_CHECK: {13:5000, 20:4800, 25:4800, 40:14500, 50:14500, 75:36000},
+ROAD: 1500000, ROAD_WAIVE_MAX: 10
+};
+var $ = function(id){ return document.getElementById(id);};
+
+/* populate selects */
+var unitsSel = $("units"), pipeSel = $("pipe"), tankSel = $("tank");
+for (var u=1; u<=100; u++){ var o=document.createElement("option"); o.value=u; o.textContent=u; if(u===10)o.selected=true; unitsSel.appendChild(o);}
+[13,20,25,40,50,75].forEach(function(s){ var o=document.createElement("option"); o.value=s; o.textContent=s; if(s===40)o.selected=true; pipeSel.appendChild(o);});
+for (var t=1; t<=40; t++){ var o2=document.createElement("option"); o2.value=t; o2.textContent=t; if(t===10)o2.selected=true; tankSel.appendChild(o2);}
+
+function yen(n){ return "¥" + Math.round(n).toLocaleString("ja-JP");}
+function man(n){ return Math.round(n).toLocaleString("ja-JP");}
+function man1(n){ return (Math.round(n*10)/10).toLocaleString("ja-JP");}
+
+function calcEstimate(f){
+var base = f.floors<=4? COST.BASE_4: f.floors===5? COST.BASE_5: f.floors===6? COST.BASE_6: COST.BASE_6 + (f.floors-6)*COST.BASE_ADD;
+/* フジコーと同条件で計算した金額から、一律10万円値引きした森田設備の価格にする */
+var combined = base + COST.UNIT_PRICE * f.units - COST.DISCOUNT;
+var isBooster = f.floors>=6 || (f.floors>=3 && f.usePump);
+var pump = isBooster? COST.PUMP: 0;
+var tankRem = f.tankRemoval? COST.REMOVAL_TANK: 0;
+var elevRem = f.elevatedRemoval? COST.REMOVAL_ELEVATED: 0;
+var construction = combined + pump + tankRem + elevRem + COST.DESIGN;
+var newPipe = f.units>=44? 75: f.units>=23? 50: f.units>=4? 40: f.units>=2? 25: 20;
+var curBasic = COST.FACILITY[f.pipe]||0, newBasic = COST.FACILITY[newPipe]||0;
+var increased = newPipe > f.pipe;
+var diff = (increased && newBasic>curBasic)? newBasic-curBasic: 0;
+var road=0, roadReason="";
+if (increased){
+if (f.tank <= COST.ROAD_WAIVE_MAX){ road=0; roadReason="受水槽"+COST.ROAD_WAIVE_MAX+"t以下につき道路工事費は免除で試算";}
+else { road=COST.ROAD; roadReason="増径・受水槽"+COST.ROAD_WAIVE_MAX+"t超のため道路工事費が発生";}
+} else { roadReason="口径変更なしのため道路工事費は不要";}
+var check = COST.DESIGN_CHECK[newPipe]||0;
+return { total: construction+diff+check+road, construction:construction, combined:combined, pump:pump,
+tankRem:tankRem, elevRem:elevRem, design:COST.DESIGN, diff:diff, road:road, check:check,
+roadReason:roadReason, newPipe:newPipe, isBooster:isBooster};
+}
+
+function calcSimulation(units, tankCap, isBooster, initialCostYen, renewalYear){
+var scale = Math.max(0.5, units/60);
+var baseCap=5, safeCap = tankCap||5, calcCap = Math.max(baseCap, safeCap);
+var cleanY = ((48000 + (calcCap-baseCap)*2000)/10000)*1.3;
+var tankMaintY = 12*scale*1.3, tankElecY = 20*scale*1.3, tankPumpRep = 130*scale*1.3;
+var renewalCost = (safeCap<=10? safeCap*60: 600+(safeCap-10)*30) * 1.3;
+var isDirect =!isBooster;
+var newMaintY = isDirect?0:12*scale*1.3, newElecY = isDirect?0:15*scale*1.3, newPumpRep = isDirect?0:150*scale*1.3;
+var constMan = initialCostYen/10000;
+var tankData=[], directData=[], delayedData=[];
+var tankSum=0, directSum=constMan, delayedSum=0;
+var renewalCount=0, renewalYears=[];
+var dStats={clean:0, maint:0, pumpRep:0, elec:0, construction:constMan};
+for (var year=0; year<=40; year++){
+if (year===0){
+if (renewalYear===0){ tankSum+=renewalCost; renewalCount++; renewalYears.push(0);}
+} else {
+tankSum += (cleanY+tankMaintY+tankElecY);
+if (year%20===0) tankSum += tankPumpRep;
+if (year===renewalYear && renewalYear!==0){ tankSum+=renewalCost; renewalCount++; renewalYears.push(year);}
+if (year===renewalYear+30){ tankSum+=renewalCost; renewalCount++; renewalYears.push(year);}
+}
+tankData.push(tankSum);
+if (year>0){ directSum += (newMaintY+newElecY); if (year%20===0) directSum += newPumpRep;}
+directData.push(directSum);
+if (year===0){
+if (renewalYear===0) delayedSum += constMan;
+} else {
+if (year < renewalYear){
+delayedSum += (cleanY+tankMaintY+tankElecY);
+if (year%20===0){ delayedSum += tankPumpRep; dStats.pumpRep += tankPumpRep;}
+dStats.clean += cleanY; dStats.maint += tankMaintY; dStats.elec += tankElecY;
+} else if (year === renewalYear){
+delayedSum += constMan;
+} else {
+delayedSum += (newMaintY+newElecY);
+if ((year-renewalYear)%20===0){ delayedSum += newPumpRep; dStats.pumpRep += newPumpRep;}
+dStats.maint += newMaintY; dStats.elec += newElecY;
+}
+}
+delayedData.push(delayedSum);
+}
+return { tankData:tankData, directData:directData, delayedData:delayedData,
+tankTotal:tankData[40], directTotal:directData[40], delayedTotal:delayedData[40],
+savings: tankData[40]-directData[40], delayedSavings: tankData[40]-delayedData[40],
+cleanY:cleanY, tankMaintY:tankMaintY, newMaintY:newMaintY, tankPumpRep:tankPumpRep, newPumpRep:newPumpRep,
+tankElecY:tankElecY, newElecY:newElecY, renewalCost:renewalCost, constMan:constMan,
+dStats:dStats, renewalCount:renewalCount, renewalYears:renewalYears};
+}
+
+function drawChart(tankData, rightData, rightLabel){
+var svg = $("chart");
+var W=720,H=380,pl=86,pr=16,pt=16,pb=54, iw=W-pl-pr, ih=H-pt-pb;
+var maxV=0, i;
+for (i=0;i<=40;i++){ maxV=Math.max(maxV, tankData[i], rightData[i]);}
+var maxY = Math.max(500, Math.ceil(maxV/500)*500);
+function X(y){ return pl + iw*(y/40);}
+function Y(v){ return pt + ih - ih*(v/maxY);}
+function pts(data){ var s=""; for (var y=0;y<=40;y++){ s += (y? " L":"M") + X(y).toFixed(1) + " " + Y(data[y]).toFixed(1);} return s;}
+var g="";
+for (var v=0; v<=maxY; v+=500){
+var y = Y(v);
+g += '<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="var(--line)" stroke-width="1"/>';
+g += '<text x="'+(pl-8)+'" y="'+(y+5)+'" text-anchor="end" font-size="13.5" fill="var(--muted)">'+Math.round(v).toLocaleString("ja-JP")+'</text>';
+}
+for (var yr=0; yr<=40; yr+=5){
+g += '<text x="'+X(yr)+'" y="'+(H-36)+'" text-anchor="middle" font-size="13.5" fill="var(--muted)">'+yr+'年</text>';
+}
+g += '<text x="'+(pl+iw/2)+'" y="'+(H-10)+'" text-anchor="middle" font-size="14" fill="var(--muted)">経過年数</text>';
+var cy = pt + ih/2;
+g += '<text x="20" y="'+cy+'" text-anchor="middle" font-size="14" fill="var(--muted)" transform="rotate(-90 20 '+cy+')">累計支出（万円）</text>';
+g += '<path d="'+pts(tankData)+' L'+X(40)+' '+Y(0)+' L'+X(0)+' '+Y(0)+' Z" fill="rgba(184,168,156,.16)" stroke="none"/>';
+g += '<path d="'+pts(rightData)+' L'+X(40)+' '+Y(0)+' L'+X(0)+' '+Y(0)+' Z" fill="rgba(234,88,12,.12)" stroke="none"/>';
+g += '<path d="'+pts(tankData)+'" fill="none" stroke="#b8a89c" stroke-width="3"/>';
+g += '<path d="'+pts(rightData)+'" fill="none" stroke="#ea580c" stroke-width="3.5"/>';
+g += '<circle cx="'+X(40)+'" cy="'+Y(tankData[40])+'" r="5.5" fill="#b8a89c"/>';
+g += '<circle cx="'+X(40)+'" cy="'+Y(rightData[40])+'" r="5.5" fill="#ea580c"/>';
+g += '<text x="'+(X(40)-8)+'" y="'+(Y(tankData[40])-12)+'" text-anchor="end" font-size="15" font-weight="bold" fill="var(--muted)">'+man(tankData[40])+'万円</text>';
+g += '<text x="'+(X(40)-8)+'" y="'+(Y(rightData[40])+24)+'" text-anchor="end" font-size="15" font-weight="bold" fill="#ea580c">'+man(rightData[40])+'万円（'+rightLabel+'）</text>';
+svg.innerHTML = g;
+}
+
+var floorsEl=$("floors"), boosterEl=$("booster"), boosterWrap=$("boosterWrap");
+var lastFloors = 4;
+
+function readInputs(){
+return { floors: Number(floorsEl.value), units: Number(unitsSel.value), pipe: Number(pipeSel.value),
+tank: Number(tankSel.value), usePump: boosterEl.checked, tankRemoval: $("tankRemoval").checked,
+elevatedRemoval: $("elevatedRemoval").checked};
+}
+
+function update(){
+var f = readInputs();
+$("floorsVal").textContent = f.floors + "階";
+/* booster visibility: 3-5F only (6F+ is always booster, under 3F direct) */
+if (f.floors>=3 && f.floors<=5) boosterWrap.classList.remove("hidden"); else boosterWrap.classList.add("hidden");
+
+var est = calcEstimate(f);
+var renewalYear = Number($("renewalYear").value);
+var compareNow = $("compareNow").checked;
+if (compareNow) renewalYear = 0;
+var sim = calcSimulation(f.units, f.tank, est.isBooster, est.total, renewalYear);
+var isNow = renewalYear===0;
+var dispSavings = isNow? sim.savings: sim.delayedSavings;
+var rightTotal = isNow? sim.directTotal: sim.delayedTotal;
+var rightData = isNow? sim.directData: sim.delayedData;
+var rightLabel = isNow? "今すぐ直結化": renewalYear + "年後に直結化";
+
+/* hero + preview: 本体の比較（ステップ2・4）と同じシナリオの数値を使う。
+   以前は「今すぐ直結化＋受水槽を今すぐ交換」の別条件で計算していたため、
+   受水槽維持が2,863万円・削減額が1,383万円と本体（2,083万円／513万円）より高く表示されていた。 */
+$("heroSavings").textContent = man(dispSavings);
+$("heroCond").textContent = f.floors+"階・"+f.units+"戸・受水槽"+f.tank+"t";
+$("pvCond").textContent = f.floors+"階・"+f.units+"戸・受水槽"+f.tank+"t・口径"+f.pipe+"mm";
+$("pvTotal").textContent = yen(est.total);
+$("pvTank").textContent = man(sim.tankTotal)+" 万円";
+$("pvDirectLabel").textContent = rightLabel + "した場合（40年）";
+$("pvDirect").textContent = man(rightTotal)+" 万円";
+$("pvSavings").textContent = man(dispSavings);
+$("pvAvg").textContent = "（年間平均：約"+man(dispSavings/40)+"万円）";
+
+/* step 2 */
+$("savingsPill").textContent = rightLabel + "によるコスト削減効果";
+$("savingsAmt").textContent = man(dispSavings);
+$("savingsAvg").textContent = "（年間平均：約" + man(dispSavings/40) + "万円）";
+
+/* step 3 */
+$("totalAmt").textContent = yen(est.total);
+$("bdConstruction").textContent = yen(est.construction);
+$("bdBase").textContent = yen(est.combined);
+if (est.pump>0){ $("bdPumpRow").style.display=""; $("bdPump").textContent = yen(est.pump);}
+else { $("bdPumpRow").style.display="none";}
+$("bdEtc").textContent = yen(est.design + est.tankRem + est.elevRem);
+$("bdFees").textContent = yen(est.diff + est.road + est.check);
+$("bdDiff").textContent = yen(est.diff);
+$("bdRoad").textContent = yen(est.road);
+$("bdCheck").textContent = yen(est.check);
+$("bdNewPipe").textContent = est.newPipe + "mm";
+$("bdRoadReason").textContent = est.roadReason;
+$("bdPumpType").textContent = est.isBooster? "方式：直結増圧方式（増圧ポンプあり）": "方式：直結直圧方式（ポンプなし）";
+
+/* step 4 */
+$("renewalYearVal").textContent = renewalYear===0? "今すぐ": renewalYear + "年後";
+$("barTankVal").textContent = man(sim.tankTotal) + "万円";
+$("barRightCap").textContent = rightLabel;
+$("barRightVal").textContent = man(rightTotal) + "万円";
+$("barRightVal").style.height = Math.max(18, rightTotal/sim.tankTotal*100) + "%";
+$("barRightFoot").textContent = man(dispSavings) + "万円 お得！";
+$("legendRight").textContent = rightLabel + "（累計支出）";
+$("thRight").textContent = isNow? "今すぐ直結給水方式": renewalYear + "年後に直結給水方式";
+$("sliderNoteLabel").textContent = rightLabel;
+drawChart(sim.tankData, rightData, rightLabel);
+
+var rClean = isNow? 0: sim.dStats.clean;
+var rMaint = isNow? sim.newMaintY*40: sim.dStats.maint;
+var rPump = isNow? sim.newPumpRep*2: sim.dStats.pumpRep;
+var rElec = isNow? sim.newElecY*40: sim.dStats.elec;
+$("tTankClean").textContent = man(sim.cleanY*40) + "万円";
+$("tTankMaint").textContent = man(sim.tankMaintY*40) + "万円";
+$("tTankPump").textContent = man(sim.tankPumpRep*2) + "万円";
+$("tTankElec").textContent = man(sim.tankElecY*40) + "万円";
+$("tTankRenew").textContent = man(sim.renewalCost*sim.renewalCount) + "万円（" + sim.renewalCount + "回）";
+$("tTankTotal").textContent = man(sim.tankTotal) + "万円";
+$("tRightClean").textContent = man(rClean) + "万円";
+$("tRightMaint").textContent = man(rMaint) + "万円";
+$("tRightPump").textContent = man(rPump) + "万円";
+$("tRightElec").textContent = man(rElec) + "万円";
+$("tRightRenew").textContent = "0万円";
+$("tRightConst").textContent = man(sim.constMan) + "万円";
+$("tRightTotal").textContent = man(rightTotal) + "万円";
+$("tRightSaving").textContent = man(dispSavings) + " 万円 お得";
+$("renewNote").textContent = "※受水槽方式を続けた場合、受水槽の更新は" +
+(sim.renewalYears.length? sim.renewalYears.map(function(y){return y===0?"今すぐ":y+"年後";}).join("・"): "40年以内なし") +
+"に計" + sim.renewalCount + "回（1回あたり約" + man(sim.renewalCost) + "万円）を見込んで試算しています。ポンプ交換は20年ごとで計算しています。";
+
+/* お問い合わせフォームへシミュレーション結果を添付 */
+var lines = [
+"建物： " + f.floors + "階 / " + f.units + "戸 / 現在の口径 " + f.pipe + "mm / 受水槽 " + f.tank + "t",
+"撤去： 受水槽 " + (f.tankRemoval?"あり":"なし") + " / 高架水槽 " + (f.elevatedRemoval?"あり":"なし"),
+"概算総額（工事費＋納付金）： " + yen(est.total),
+"　直結化工事費用： " + yen(est.construction) + " / 納付金・手数料等： " + yen(est.diff+est.road+est.check),
+"40年比較（" + rightLabel + "）： 受水槽維持 " + man(sim.tankTotal) + "万円 → 直結化 " + man(rightTotal) + "万円",
+"削減額： " + man(dispSavings) + "万円（年間平均 約" + man(dispSavings/40) + "万円）"
+];
+var resultText = lines.join("\n");
+$("simResultField").value = resultText;
+$("simResultPreview").textContent = resultText;
+$("copyResult").dataset.text = resultText;
+$("copyMsg").textContent = "";
+}
+
+/* events */
+floorsEl.addEventListener("input", function(){
+var v = Number(floorsEl.value);
+if (v!== lastFloors){
+if (v===3) boosterEl.checked = false;
+else if (v===4 || v===5) boosterEl.checked = true;
+lastFloors = v;
+}
+update();
+});
+[unitsSel, pipeSel, tankSel].forEach(function(el){ el.addEventListener("change", update);});
+[boosterEl, $("tankRemoval"), $("elevatedRemoval")].forEach(function(el){ el.addEventListener("change", update);});
+
+var renewalEl = $("renewalYear"), compareEl = $("compareNow");
+renewalEl.addEventListener("input", function(){
+compareEl.checked = Number(renewalEl.value)===0;
+update();
+});
+compareEl.addEventListener("change", function(){
+if (compareEl.checked) renewalEl.value = 0;
+else if (Number(renewalEl.value)===0) renewalEl.value = 20;
+update();
+});
+
+$("copyResult").addEventListener("click", function(){
+var text = this.dataset.text || "";
+function done(){ $("copyMsg").textContent = "結果をコピーしました。お問い合わせフォームに貼り付けて送れます。";}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done, function(){ fallback();});
+} else fallback();
+function fallback(){
+var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy"); done();} catch(e){ $("copyMsg").textContent = "コピーできませんでした。下のお問い合わせフォームから、結果付きでそのまま送信できます。";}
+document.body.removeChild(ta);
+}
+});
+
+/* FAQ */
+var faqs = document.querySelectorAll(".faq");
+for (var i=0;i<faqs.length;i++){
+(function(item){
+item.querySelector("button").addEventListener("click", function(){
+var open = item.classList.toggle("open");
+this.setAttribute("aria-expanded", open? "true": "false");
+});
+})(faqs[i]);
+}
+
+/* お問い合わせフォーム送信（FormSubmit AJAX経由で森田設備のメールへ転送） */
+$("contactForm").addEventListener("submit", function(ev){
+ev.preventDefault();
+var form = this, status = $("formStatus"), btn = $("formSubmitBtn");
+status.textContent = "送信中です…";
+btn.disabled = true;
+fetch("https://formsubmit.co/ajax/kaito.m_king_0203@icloud.com", {
+method: "POST",
+headers: { "Accept": "application/json" },
+body: new FormData(form)
+}).then(function(res){
+if (!res.ok) throw new Error("send failed");
+return res.json();
+}).then(function(){
+form.reset();
+update();
+status.textContent = "送信しました。内容を確認のうえ、株式会社 森田設備よりご連絡いたします。";
+btn.disabled = false;
+}).catch(function(){
+status.textContent = "送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。";
+btn.disabled = false;
+});
+});
+
+/* 初期表示はフジコーの初期条件に固定する（ブラウザのフォーム状態復元で初期チェックが外れても金額がずれないように） */
+floorsEl.value = "4"; lastFloors = 4;
+unitsSel.value = "10"; pipeSel.value = "40"; tankSel.value = "10";
+boosterEl.checked = true;
+$("tankRemoval").checked = true;
+$("elevatedRemoval").checked = false;
+renewalEl.value = "20"; compareEl.checked = false;
+update();
+})();
+</script>
+</body>
+</html>
